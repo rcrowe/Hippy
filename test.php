@@ -17,7 +17,7 @@ Hippy::speak('Build succedded');
 
 
 //Or just pass the token
-Hippy::settings('abc123');
+Hippy::settings('xxxxxx');
 
 Hippy::speak('Build failed', array(
     'room'   => 'General',
@@ -28,9 +28,9 @@ Hippy::speak('Build failed', array(
 
 
 //Send multiple messages
-Hippy::settings('abc123');
+Hippy::settings('yyyyyy');
 
-$room = Hippy::room('General')->from('rcrowe')->notify(true);
+$room = Hippy::room('General')->from('eworcr')->notify(true);
 
 $room->speak('Unit test failed on branch master');
 
@@ -41,6 +41,8 @@ $room->speak('Fail on line 27', array(
 
 
 //Chain calls
+$settings['token'] = 'zzzzzz';
+
 Hippy::settings($settings);
 
 Hippy::room()->speak('Testing')->speak('from')->speak('Hippy!');

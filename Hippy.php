@@ -22,25 +22,24 @@ class Hippy
                 'token' => $config
             );
         }
-        else
-        {
-            //TODO: throw exception
-        }
     }
     
     public static function speak($msg, $config = NULL)
     {
-        if(!empty($config) && is_array($config))
-        {
-            array_merge(Hippy::$config, $config);
-        }
-        
         $room = new Room(Hippy::$config);
         $room->speak($msg, $config);
     }
     
     public static function room($room = NULL)
     {
+        if(!empty($room))
+        {
+            if(is_numeric($room) || is_string($room))
+            {
+                Hippy::$config['room'] = $room;
+            }
+        }
+        
         return new Room(Hippy::$config);
     }
 }
