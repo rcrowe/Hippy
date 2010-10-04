@@ -29,10 +29,6 @@ class Hippy_Request extends Hippy_Base
         $args = (is_array($args) && !empty($args)) ? array_merge($args, parent::$config) : parent::$config;
         $args['format'] = 'json';
         
-        //TODO remove debug element
-        print_r($args);
-        return;
-        
         //Build URL if this is a GET request
         $url = self::HIPCHAT_TARGET.'/'.self::HIPCHAT_VERSION.'/'.$url;
         

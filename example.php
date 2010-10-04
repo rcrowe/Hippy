@@ -3,11 +3,18 @@
 
 require 'Hippy.php';
 
+Hippy::speak('Testing notification', array(
+    'token' => '67ef88155f50c32346ec506e8cc193',
+    'room'  => 'Hippy',
+    'from'  => 'Rob C',
+    'notify'=> false
+));
+
 
 //Or pass all of the configuration in when you speak
 Hippy::speak('HipChat rocks', array(
-    'token'  => 'abc123',
-    'room'   => 'General', //Name or id of room to send message to
+    'token'  => '67ef88155f50c32346ec506e8cc193',
+    'room'   => 'Hippy', //Name or id of room to send message to
     'from'   => 'rcrowe', //Who message is from
     'notify' => true      //Optional - whether this message should trigger a notification
 ));
@@ -16,8 +23,8 @@ Hippy::speak('HipChat rocks', array(
 //Or pass the settings to setttings()
 //so you dont need to enter them again
 $settings = array(
-    'token'  => 'abc123',
-    'room'   => 'General', //Name or id of room to send message to
+    'token'  => '67ef88155f50c32346ec506e8cc193',
+    'room'   => 'Hippy', //Name or id of room to send message to
     'from'   => 'rcrowe', //Who message is from
     'notify' => true      //Optional - whether this message should trigger a notification
 );
@@ -30,10 +37,10 @@ Hippy::speak('Yes, build succedded');
 
 //Or just pass the token
 //and set the rest when you send
-Hippy::settings('xxxxxx');
+Hippy::settings('67ef88155f50c32346ec506e8cc193');
 
 Hippy::speak('Build failed', array(
-    'room'   => 'General',
+    'room'   => 'Hippy',
     'from'   => 'rcrowe',
     'notify' => false
 ));
@@ -41,9 +48,9 @@ Hippy::speak('Build failed', array(
 
 
 //Send multiple messages
-Hippy::settings('yyyyyy');
+Hippy::settings('67ef88155f50c32346ec506e8cc193');
 
-$room = Hippy::room('General')->from('eworcr')->notify(true);
+$room = Hippy::room('Hippy')->from('eworcr')->notify(true);
 
 $room->speak('Unit test failed on branch master');
 
@@ -55,7 +62,7 @@ $room->speak('Fail on line 27', array(
 
 
 //Chain calls
-$settings['token'] = 'zzzzzz';
+$settings['token'] = '67ef88155f50c32346ec506e8cc193';
 
 Hippy::settings($settings);
 

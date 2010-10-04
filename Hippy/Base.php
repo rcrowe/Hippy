@@ -10,10 +10,13 @@ require_once 'Exceptions.php';
 class Hippy_Base
 {
     //Array that holds all set settings
-    protected static $config = array();
+    //Contains defaults
+    protected static $config = array(
+        'notify' => 1
+    );
     
     //Mandatory array_keys that need to be in settings {@link config}.
-    private $required_keys = array('auth_token', 'room', 'from');
+    private $required_keys = array('auth_token', 'room_id', 'from');
     
     //Hippy error codes
     const HIPPY_BAD_SETTINGS           = -2;
@@ -44,6 +47,14 @@ class Hippy_Base
             {
                 self::$config['auth_token'] = $fig['token'];
                 unset($fig['token']);
+            }
+            
+            //Rename `room`
+            //Use `room_id` instead of `room` as its easier
+            if(isset($fig['room']))
+            {
+                self::$config['room_id'] = $fig['room'];
+                unset($fig['room']);
             }
             
             //Convert boolean notify flag to integer
