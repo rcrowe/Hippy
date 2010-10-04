@@ -3,6 +3,18 @@
 
 require 'Hippy.php';
 
+
+//Or pass all of the configuration in when you speak
+Hippy::speak('HipChat rocks', array(
+    'token'  => 'abc123',
+    'room'   => 'General', //Name or id of room to send message to
+    'from'   => 'rcrowe', //Who message is from
+    'notify' => true      //Optional - whether this message should trigger a notification
+));
+
+
+//Or pass the settings to setttings()
+//so you dont need to enter them again
 $settings = array(
     'token'  => 'abc123',
     'room'   => 'General', //Name or id of room to send message to
@@ -12,11 +24,12 @@ $settings = array(
 
 Hippy::settings($settings);
 
-Hippy::speak('Build succedded');
-
+Hippy::speak('Did the build succedded');
+Hippy::speak('Yes, build succedded');
 
 
 //Or just pass the token
+//and set the rest when you send
 Hippy::settings('xxxxxx');
 
 Hippy::speak('Build failed', array(
@@ -35,7 +48,8 @@ $room = Hippy::room('General')->from('eworcr')->notify(true);
 $room->speak('Unit test failed on branch master');
 
 $room->speak('Fail on line 27', array(
-    'from' => 'HippyBot'
+    'from'   => 'HippyBot',
+    'notify' => false
 ));
 
 
