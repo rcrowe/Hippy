@@ -3,15 +3,14 @@
 require 'Hippy.php';
 
 Hippy::config(array(
-    'token'  => 'ca3b43383354248ab11aad2d7be8c4',
-    'room'   => 'Hippy',
-    'from'   => 'rcrowe',
+    'token'  => 'your_token',
+    'room'   => 'your_room',
+    'from'   => 'your_name',
     'notify' => true
 ));
 
-Hippy::speak('test', array('from' => 'Elliot'));
-Hippy::speak('test', array('from' => 'Elliot'));
-Hippy::speak('test', array('from' => 'Elliot'));
-Hippy::speak('test', array('from' => 'Elliot'));
+Hippy::speak('Hello from Hippy');
+
+Hippy::speak('Look how I can change my name', array('from' => 'Hippy'));
 
 ?>
