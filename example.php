@@ -1,5 +1,9 @@
 <?php
 
+/*
+ Example of using Hippy - Make sure you replace the config settings below with your own
+*/
+
 require 'Hippy.php';
 
 Hippy::config(array(
@@ -12,5 +16,11 @@ Hippy::config(array(
 Hippy::speak('Hello from Hippy');
 
 Hippy::speak('Look how I can change my name', array('from' => 'Hippy'));
+
+Hippy::speak('Or pass all the config options in', array(
+   'token' => 'your_token',
+   'room'  => 'your_room',
+   'from'  => 'your_name'
+));
 
 ?>
