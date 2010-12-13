@@ -28,101 +28,145 @@
  * @license LGPL
  *
  */
-class Hippy
-{
+class Hippy {
+
     /**
-     * HipChat API details
+     * HipChat API hostname
      */
-    const HIPCHAT_TARGET  = 'http://api.hipchat.com';
-    const HIPCHAT_VERSION = 'v1';
-    const HIPCHAT_REQUEST = 'rooms/message';
-    private $url;
+    const HIPCHAT_TARGET = 'http://api.hipchat.com';
     
     /**
-     * Response codes from the HipChat API
+     * Version of API Hippy targets
      */
-    const STATUS_BAD_RESPONSE          = -1;
-    const STATUS_OK                    = 200;
-    const STATUS_BAD_REQUEST           = 400;
-
+    const HIPCHAT_VERSION = 'v1';
+    
+    /**
+     * API request for new message
+     */
+    const HIPCHAT_REQUEST = 'rooms/message';
+    
+    /**
+     * Bad response from API
+     */
+    const STATUS_BAD_RESPONSE = -1;
+    
+    /**
+     * Response OK from API
+     */
+    const STATUS_OK           = 200;
+    
+    /**
+     * Bad request from API
+     */
+    const STATUS_BAD_REQUEST  = 400;
+    
     /**
      * Instance of Hippy
+     *
+     * @see Hippy::getInstance()
      */
     private static $instance;
-
+    
     /**
-     * Holds settings for send message to HipChat REST API
+     * Holds URL to API endpoint
+     */
+    private $endpoint_url;
+    
+    /**
+     * Holds Hippy settings
+     *
+     * @see Hippy::config()
      */
     private $settings = array();
     
     /**
-     * Settings that have to be set before a message can be sent
+     * Settings that need to be set for a valid message
      */
-    private $requiredKeys = array(
-        'auth_token',
-        'room_id',
-        'from'
-    );
+    private $requiredKeys = array('auth_token', 'room_id', 'from');
     
     /**
      * Hippy constructor. Use either Hippy::speak or Hippy::getInstance if you want to do
      * anythin else.
      */
-    private function __construct() {
-    
-        //Build URL to make request against
-        $this->url = sprintf("%s/%s/%s", self::HIPCHAT_TARGET, self::HIPCHAT_VERSION, self::HIPCHAT_REQUEST);
-    
+    public function __construct()
+    {
+        //Set URL to endpoint
+        $this->endpoint_url = sprintf("%s/%s/%s", self::HIPCHAT_TARGET, self::HIPCHAT_VERSION, self::HIPCHAT_REQUEST);
+        
         //Set any default settings
         $this->settings['notify'] = 1;
     }
     
     /**
-     * Get an instance of Hippy
+     * Get an instance of Hippy.
      */
-    public static function getInstance() {
-        
-        if(!isset(self::$instance)) {
+    public static function getInstance()
+    {
+        if(!isset(self::$instance))
+        {
             self::$instance = new Hippy;
         }
         
         return self::$instance;
     }
-
-    /**
-     * Send a message to a HipChat room
-     *
-     * @param string       $msg    Message to send to the room. Text is UTF8 encoded.
-     * @param array|string $config Either an array of settings or API token.
-     *
-     * @internal Uses Hippy_Room::speak() to send message. This is just a shortcut
-     *
-     * @throws HippyException 
-     */
-    public static function speak($msg, $config = NULL) {
     
-        $hip = self::getInstance();
-        $hip->settings($config);
-        $hip->send($msg);
+    /**
+     * Returns URL to API endpoint
+     *
+     * @return String
+     */
+    public function endpoint()
+    {
+        return $this->endpoint_url;
     }
     
     /**
-     * Set any global settings instead of setting it each time you send a message
+     * Clears static instance of Hippy. Mainly used for testing purposes.
      */
-    public static function config($config) {
-    
-        $hip = self::getInstance();
-        $hip->settings($config);
+    public static function destroy()
+    {
+        self::$instance = new Hippy;
     }
     
     /**
-     * Sets settings for messages
+     * Set configuration for all Hippy messages
      *
-     * @param array $config Array of settings, see examples
+     * @param  Array $config Settings to set
+     * @return Array Settings
      */
-    private function settings($config) {
+    public static function config($config = null)
+    {
+        $instance = self::getInstance();
+        
+        //Set any settings if passed in
+        if(!is_null($config))
+        {
+            $instance->settings($config);
+        }
+        
+        //Return new merged settings
+        return $instance->settings;
+    }
     
-        if(is_array($config) && !empty($config)) {
+    /**
+     * Sets valid settings. Renames shorthand to full names to meet API requirements
+     *
+     * @param Array $config Settings to set
+     */
+    private function settings($config)
+    {
+        if(is_array($config) && !empty($config))
+        {
+            //Remove any settings that dont have a key
+            $keys = array_keys($config);
+            
+            foreach($keys as $key)
+            {
+                if(is_int($key))
+                {
+                    unset($config[$key]);
+                }
+            }
         
             //Rename `token` to use correct name `auth_token`
             if(isset($config['token'])) {
@@ -148,18 +192,36 @@ class Hippy
     }
     
     /**
-     * Make sure settings are valid before sending message
+     * Checks that neccessery settings are set before attempting to send a new message
      *
+     * @internal Visibility changed to public to aid testing
      * @throws HippyException
      */
-    private function checkSettings() {
-    
-        foreach($this->requiredKeys as $key) {
-            if(!array_key_exists($key, $this->settings)) {
+    public function validSettings()
+    {
+        foreach($this->requiredKeys as $key)
+        {
+            if(!array_key_exists($key, $this->settings)) 
+            {
                 //Setting not set, throw exception
                 throw new HippyException(self::STATUS_BAD_REQUEST, "Hippy error: info=Settings incorrect, setting=$key"); 
             }
         }
+    }
+    
+    /**
+     * Send a message to a HipChat room
+     *
+     * @param string       $msg    Message to send to the room.
+     * @param array|string $config Either an array of settings or API token.
+     *
+     * @throws HippyException
+     */
+    public static function speak($msg, $config = null)
+    {
+        $instance = self::getInstance();
+        $instance->config($config);
+        $instance->send($msg);
     }
     
     /**
@@ -172,24 +234,27 @@ class Hippy
     private function send($msg) {
     
         //Make sure neccessery settings are set and valid
-        $this->checkSettings();
+        $this->validSettings();
         
         //Build arguments to send to HipChat API
         $args = $this->settings;
         $args['format']  = 'json';
         $args['message'] = $msg;
         
-        $this->url .= '?'.http_build_query($args);
+        $this->endpoint_url .= '?'.http_build_query($args);
         
         //Make request using cURL
-        $response = $this->makeRequest($this->url);
+        $response = $this->makeRequest($this->endpoint_url);
         $response = json_decode($response, TRUE);
         
         if(!$response) {
-            throw new HippyException(self::STATUS_BAD_RESPONSE, "Invalid JSON recieved: $response", $this->url);
+            throw new HippyException(self::STATUS_BAD_RESPONSE, "Invalid JSON recieved: $response", $this->endpoint_url);
         }
         
-        //TODO: Check that the response says `sent`
+        if($response['status'] !== "sent")
+        {
+            throw new HippyException(self::STATUS_BAD_RESPONSE, "Response states message wasn\'t sent. Response: ".$response['status'], $this->endpoint_url);
+        }
     }
     
     /**
