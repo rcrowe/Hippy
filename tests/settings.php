@@ -1,1 +1,0 @@
-<?phpdefine('TEST_HIPCHAT_TARGET', 'http://api.hipchat.com');define('TEST_HIPCHAT_VERSION', 'v1');define('TEST_HIPCHAT_REQUEST', 'rooms/message');define('TEST_BAD_RESPONSE', -1);define('TEST_OK', 200);define('TEST_BAD_REQUEST', 400);?>
