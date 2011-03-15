@@ -232,6 +232,10 @@ class Hippy {
      * @throws HippyException
      */
     private function send($msg) {
+	
+		//Hippy allows HTML in the message
+		//Replace line breaks with <br />
+		$msg = str_replace("\\n", "<br />", $msg);
     
         //Make sure neccessery settings are set and valid
         $this->validSettings();
