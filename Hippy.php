@@ -241,7 +241,7 @@ class Hippy {
 	public static function add($msg)
 	{
 		$instance = self::getInstance();
-		$instance->msg_queue[] = $msg; //Add message to queue
+		$instance->queue[] = $msg; //Add message to queue
 	}
 	
 	/**
