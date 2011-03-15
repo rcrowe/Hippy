@@ -83,6 +83,13 @@ class Hippy {
      * Settings that need to be set for a valid message
      */
     private $requiredKeys = array('auth_token', 'room_id', 'from');
+
+	/**
+	 * Holds queue of messages.
+	 *
+	 * @see Hippy::add()
+	 */
+	private $msg_queue = array();
     
     /**
      * Hippy constructor. Use either Hippy::speak or Hippy::getInstance if you want to do
@@ -223,6 +230,38 @@ class Hippy {
         $instance->config($config);
         $instance->send($msg);
     }
+
+	/**
+	 * Add a message to the queue. Message will be bundled as one message with line breaks, then sent with Hippy::go().
+	 *
+	 * @param string $msg Message you want to add the queue and send.
+	 *
+	 * @throws HippyException
+	 */
+	public static function add($msg)
+	{
+		$instance = self::getInstance();
+		$instance->msg_queue[] = $msg; //Add message to queue
+	}
+	
+	/**
+	 * Joins all the messages in the queue together with a line break and sends it.
+	 *
+	 * @throws HippyException
+	 */
+	public static function go()
+	{
+		$instance = self::getInstance();
+		
+		if(count($instance->queue) == 0)
+		{
+			throw new HippyException('Can not send queue. Queue is empty!');
+		}
+		
+		$msg = implode('\\n', $instance->queue);
+		
+		$instance->send($msg);
+	}
     
     /**
      * Attempt to send message
