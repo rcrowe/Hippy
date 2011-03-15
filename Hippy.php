@@ -89,7 +89,7 @@ class Hippy {
 	 *
 	 * @see Hippy::add()
 	 */
-	private $msg_queue = array();
+	private $queue = array();
     
     /**
      * Hippy constructor. Use either Hippy::speak or Hippy::getInstance if you want to do
