@@ -284,7 +284,7 @@ class Hippy {
         $args['format']  = 'json';
         $args['message'] = $msg;
         
-        $this->endpoint_url .= '?'.http_build_query($args);
+        $this->endpoint_url .= '?'.http_build_query($args, '', '&');
         
         //Make request using cURL
         $response = $this->makeRequest($this->endpoint_url);
