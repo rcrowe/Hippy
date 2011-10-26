@@ -247,9 +247,11 @@ class Hippy {
 	/**
 	 * Joins all the messages in the queue together with a line break and sends it.
 	 *
+	 * @param bool Whether to join the queue of messages and send as one message, or seperate messages. Default TRUE.
+	 * 
 	 * @throws HippyException
 	 */
-	public static function go()
+	public static function go($join = TRUE)
 	{
 		$instance = self::getInstance();
 		
@@ -258,9 +260,19 @@ class Hippy {
 			throw new HippyException('Can not send queue. Queue is empty!');
 		}
 		
-		$msg = implode('\\n', $instance->queue);
-		
-		$instance->send($msg);
+		if($join)
+		{
+			$msg = implode('\\n', $instance->queue);
+			
+			$instance->send($msg);
+		}
+		else
+		{
+			foreach($instance->queue, $msg)
+			{
+				$instance->send($msg);
+			}
+		}
 	}
     
     /**
