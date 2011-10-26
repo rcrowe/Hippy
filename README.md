@@ -13,10 +13,3 @@ Examples
 --------
 
 For an example of how to use Hippy see `example.php`
-
-Docs
-----
-
-Documentation is generated directly from the source code using PhpDocumentator.
-
-To regenerate: rm -r docs && phpdoc -c phpdoc.ini
