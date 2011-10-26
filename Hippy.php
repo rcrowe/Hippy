@@ -130,7 +130,7 @@ class Hippy {
     /**
      * Clears static instance of Hippy. Mainly used for testing purposes.
      */
-    public static function destroy()
+    public static function clean()
     {
         self::$instance = new Hippy;
     }
