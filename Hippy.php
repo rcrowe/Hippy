@@ -268,7 +268,7 @@ class Hippy {
 		}
 		else
 		{
-			foreach($instance->queue, $msg)
+			foreach($instance->queue as $msg)
 			{
 				$instance->send($msg);
 			}
