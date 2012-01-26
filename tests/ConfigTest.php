@@ -4,6 +4,12 @@
 include_once dirname(__FILE__).'/../Hippy.php';
 
 
+class TestDriver extends Hippy_Driver {
+	public function test() {
+		return 'TestDriver_abc123';
+	}
+}
+
 class ConfigTest extends PHPUnit_Framework_TestCase
 {
 	public function testDefaultConfig()
@@ -15,7 +21,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('Hippy', $hippy->from);
 		$this->assertEquals(1, $hippy->notify);
 		$this->assertEquals('http://api.blunderapp.com/v1/', $hippy->api_endpoint);
-		$this->assertEquals('curl', $hippy->driver);
+		$this->assertEquals('Hippy_Curl', get_class($hippy->driver));
 	}
 	
 	public function testUnknownConfig()
@@ -53,7 +59,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('Hippy', $hippy->from);
 		$this->assertEquals(1, $hippy->notify);
 		$this->assertEquals('http://api.blunderapp.com/v1/', $hippy->api_endpoint);
-		$this->assertEquals('curl', $hippy->driver);
+		$this->assertEquals('Hippy_Curl', get_class($hippy->driver));
 		
 		$hippy = Hippy::instance(array(
 			'room' => 'Monkey'
@@ -64,7 +70,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('Hippy', $hippy->from);
 		$this->assertEquals(1, $hippy->notify);
 		$this->assertEquals('http://api.blunderapp.com/v1/', $hippy->api_endpoint);
-		$this->assertEquals('curl', $hippy->driver);
+		$this->assertEquals('Hippy_Curl', get_class($hippy->driver));
 	}
 	
 	public function testCleanWithConfig()
@@ -76,7 +82,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('Hippy', $hippy->from);
 		$this->assertEquals(1, $hippy->notify);
 		$this->assertEquals('http://api.blunderapp.com/v1/', $hippy->api_endpoint);
-		$this->assertEquals('curl', $hippy->driver);
+		$this->assertEquals('Hippy_Curl', get_class($hippy->driver));
 		
 		$hippy = Hippy::instance();
 		
@@ -85,7 +91,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('Hippy', $hippy->from);
 		$this->assertEquals(1, $hippy->notify);
 		$this->assertEquals('http://api.blunderapp.com/v1/', $hippy->api_endpoint);
-		$this->assertEquals('curl', $hippy->driver);
+		$this->assertEquals('Hippy_Curl', get_class($hippy->driver));
 		
 		$hippy = Hippy::clean(array(
 			'token'        => 'wysiwyg',
@@ -102,5 +108,18 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(0, $hippy->notify);
 		$this->assertEquals('http://company.com/api/', $hippy->api_endpoint);
 		$this->assertEquals('socket', $hippy->driver);
+	}
+	
+	public function testRuntimeDriver()
+	{
+		$hippy = Hippy::instance(array(
+			'driver' => new TestDriver
+		));
+		
+		$driver = $hippy->driver;
+		
+		$this->assertEquals('TestDriver', get_class($driver));
+		
+		$this->assertEquals('TestDriver_abc123', $driver->test());
 	}
 }

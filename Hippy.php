@@ -1,9 +1,18 @@
 <?php
 
+include_once dirname(__FILE__).'/Hippy/exceptions.php';
+include_once dirname(__FILE__).'/Hippy/driver/driver.php';
+
+
 class Hippy
 {
 	protected static $instance;
 	protected $config = array();
+	
+	/**
+	 * Instead of sending a message straight away queue it up with add() and send with go()
+	 */
+	protected $queue  = array();
 	
 	
 	/**
@@ -101,7 +110,11 @@ class Hippy
         return $instance->config;
     }
 	
-	
+	/**
+     * Sets valid settings. Renames shorthand to full names to meet API requirements
+     *
+     * @param Array $config Settings to set
+     */
 	protected function settings(array $config)
 	{
 		//Rename `token` to use correct name `auth_token`
@@ -124,8 +137,108 @@ class Hippy
             $this->config['notify'] = (int)$config['notify'];
             unset($config['notify']);
         }
-        
-        //Merge any other settings
-        $this->config = array_merge($this->config, $config);		
+
+		// Merge any other settings
+        $this->config = array_merge($this->config, $config);
+		
+		// Load the driver
+		if(isset($config['driver']))
+		{
+			// Pass your own driver in at runtime
+			if(is_object($config['driver']))
+			{
+				$this->config['driver'] = $config['driver'];
+				$this->config['driver']->init($this->config);
+			}
+			else
+			{
+				$driver = $config['driver'];
+
+				if(file_exists($path = dirname(__FILE__).'/Hippy/driver/'.strtolower($driver).'.php'))
+				{
+					include_once $path;
+					$class = 'Hippy_'.ucfirst($driver);
+					$this->config['driver'] = new $class;
+					$this->config['driver']->init($this->config);
+				}
+			}
+		}		
+	}
+	
+	/**
+     * Checks that neccessery settings are set before attempting to send a new message
+     *
+     * @deprecated since 0.5 - Use Hippy_Driver::valid_settings() to check this.
+     * @throws HippyException
+     */
+    public function validSettings()
+    {
+        foreach(array('auth_token', 'room_id', 'from', 'api_endpoint') as $key)
+        {
+			if($this->$key === null OR strlen(trim($this->$key)) === 0)
+            {
+                //Setting not set, throw exception
+				$driver = $this->driver;
+                throw new HippyException($driver::STATUS_BAD_REQUEST, "Hippy error: info=Settings incorrect, setting=$key"); 
+            }
+        }
+
+		return true;
+    }
+
+
+	public static function speak($msg, array $config = array())
+	{
+		$instance = static::instance();
+		
+		// Set any runtime settings
+		$instance->settings($config);
+		
+		// Initalize driver with latest config and send message
+		return $instance->driver->init($instance->config)->send($msg);
+	}
+	
+	/**
+	 * Add a message to the queue. Message will be bundled as one message with line breaks, then sent with Hippy::go().
+	 *
+	 * @param string $msg Message you want to add the queue and send.
+	 *
+	 * @throws HippyException
+	 */
+	public static function add($msg)
+	{
+		$instance          = static::instance();
+		$instance->queue[] = $msg; //Add message to queue
+	}
+	
+	/**
+	 * Joins all the messages in the queue together with a line break and sends it.
+	 *
+	 * @param bool Whether to join the queue of messages and send as one message, or seperate messages. Default TRUE.
+	 * 
+	 * @throws HippyException
+	 */
+	public static function go($join = true)
+	{
+		$instance = static::instance();
+		
+		if(count($instance->queue) == 0)
+		{
+			throw new HippyException('Can not send queue. Queue is empty!');
+		}
+		
+		if($join)
+		{
+			$msg = implode('<br />', $instance->queue);
+			
+			$instance->send($msg);
+		}
+		else
+		{
+			foreach($instance->queue as $msg)
+			{
+				$instance->send($msg);
+			}
+		}
 	}
 }
