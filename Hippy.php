@@ -54,7 +54,7 @@ class Hippy
 			static::$instance->settings($config);
 		}
 		
-        return static::$instance;
+		return static::$instance;
 	}
 	
 	/**
@@ -68,13 +68,19 @@ class Hippy
 	}
 	
 	/**
-	 * Get the value of a config variable
+	 * Get the value of a config variable or return the current queue of messages
+	 * if there are any.
 	 *
 	 * @param   string  Name of the config variable
 	 * @return  mixed
 	 */
 	public function __get($name)
 	{
+		if($name === 'queue')
+		{
+			return $this->queue;
+		}
+		
 		return (isset($this->config[$name])) ? $this->config[$name] : null;
 	}
 	
@@ -153,16 +159,19 @@ class Hippy
 			else
 			{
 				$driver = $config['driver'];
-
-				if(file_exists($path = dirname(__FILE__).'/Hippy/driver/'.strtolower($driver).'.php'))
+				
+				// Make sure the driver exists
+				if(!file_exists($path = dirname(__FILE__).'/Hippy/driver/'.strtolower($driver).'.php'))
 				{
-					include_once $path;
-					$class = 'Hippy_'.ucfirst($driver);
-					$this->config['driver'] = new $class;
-					$this->config['driver']->init($this->config);
+					throw new HippyUnknownDriverException('Can not find driver: '.$path);
 				}
+				
+				include_once $path;
+				$class = 'Hippy_'.ucfirst($driver);
+				$this->config['driver'] = new $class;
+				$this->config['driver']->init($this->config);
 			}
-		}		
+		}	
 	}
 	
 	/**
@@ -173,13 +182,31 @@ class Hippy
      */
     public function validSettings()
     {
-        foreach(array('auth_token', 'room_id', 'from', 'api_endpoint') as $key)
+		$required = array(
+			array(
+				'setting' => 'auth_token',
+				'map'     => 'token',
+			),
+			array(
+				'setting' => 'room_id',
+				'map'     => 'room',
+			),
+			array(
+				'setting' => 'from',
+				'map'     => 'from',
+			),
+			array(
+				'setting' => 'api_endpoint',
+				'map'     => 'api_endpoint',
+			),
+		);
+	
+        foreach($required as $setting)
         {
-			if($this->$key === null OR strlen(trim($this->$key)) === 0)
+			if($this->$setting['setting'] === null OR strlen(trim($this->$setting['setting'])) === 0)
             {
                 //Setting not set, throw exception
-				$driver = $this->driver;
-                throw new HippyException($driver::STATUS_BAD_REQUEST, "Hippy error: info=Settings incorrect, setting=$key"); 
+				throw new HippyMissingSettingException('Missing setting: '.$setting['map']);
             }
         }
 
@@ -188,7 +215,7 @@ class Hippy
 
 
 	public static function speak($msg, array $config = array())
-	{
+	{		
 		$instance = static::instance();
 		
 		// Set any runtime settings
@@ -221,24 +248,32 @@ class Hippy
 	public static function go($join = true)
 	{
 		$instance = static::instance();
+		$driver   = $instance->driver;
 		
-		if(count($instance->queue) == 0)
+		if(count($instance->queue) === 0)
 		{
-			throw new HippyException('Can not send queue. Queue is empty!');
+			// throw new HippyException($driver::STATUS_BAD_REQUEST, 'Can not send queue. Queue is empty!');
+			throw new HippyEmptyQueueException('Can not send queue. Queue is empty!');
 		}
 		
-		if($join)
+		
+		if($join OR count($instance->queue) === 1)
 		{
+			// Sending as one big message
 			$msg = implode('<br />', $instance->queue);
 			
-			$instance->send($msg);
+			return $instance->driver->send($msg);
 		}
-		else
+		
+		
+		// Hold the individual responses for each msg sent
+		$responses = array();
+		
+		foreach($instance->queue as $msg)
 		{
-			foreach($instance->queue as $msg)
-			{
-				$instance->send($msg);
-			}
+			$responses[] = $instance->driver->send($msg);
 		}
+		
+		return $responses;
 	}
 }

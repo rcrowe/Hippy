@@ -34,15 +34,7 @@ class InstanceTest extends PHPUnit_Framework_TestCase
 		// Now test calling instance with the clear flag
 		$hippy = Hippy::instance(array(), true);
 		
-		try
-		{
-			$error = $hippy->some_data;
-			$this->assertFalse(true);
-		}
-		catch(Exception $ex)
-		{
-			$this->assertTrue(true);
-		}
+		$this->assertEquals(null, $hippy->some_data);
 	}
 	
 	public function testCleanInstanceShortcut()
@@ -63,14 +55,6 @@ class InstanceTest extends PHPUnit_Framework_TestCase
 		// Now test calling instance with the clear flag
 		$hippy = Hippy::clean();
 		
-		try
-		{
-			$error = $hippy->some_data;
-			$this->assertFalse(true);
-		}
-		catch(Exception $ex)
-		{
-			$this->assertTrue(true);
-		}
+		$this->assertEquals(null, $hippy->some_data);
 	}
 }

@@ -2,15 +2,17 @@
 
 return array(
 	
-	'token' => 'abc123',
+	'token'  => 'qwerty',
 	
-	'room' => 'test',
+	'room'   => 'rocket',
 	
-	'from' => 'Hippy',
+	'from'   => 'Blunder',
 	
-	'notify' => true,
+	'notify' => false,
 	
-	'api_endpoint' => 'http://api.blunderapp.com/v1/',
+	'color'  => 'red',
+	
+	'api_endpoint' => 'http://api.blunderapp.com/v2/',
 	
 	'driver' => 'curl',
 );

@@ -7,8 +7,30 @@ include_once dirname(__FILE__).'/../Hippy.php';
 class MockDriver extends Hippy_Driver {
 }
 
+class BadJSONDriver extends Hippy_Driver {
+	public function request($url) {
+		return 'i am not JSON!';
+	}
+}
+
+class MissingStatusDriver extends Hippy_Driver {
+	public function request($url) {
+		return json_encode(array(
+			'missing_field' => true
+		));
+	}
+}
+
+class NotSentDriver extends Hippy_Driver {
+	public function request($url) {
+		return json_encode(array(
+			'status' => 'failed'
+		));
+	}
+}
+
 class DriverTest extends PHPUnit_Framework_TestCase
-{
+{	
 	public function testDriverConstants()
 	{
 		$hippy = Hippy::clean(array(
@@ -19,9 +41,6 @@ class DriverTest extends PHPUnit_Framework_TestCase
 		
 		$this->assertEquals('MockDriver', get_class($driver));
 		$this->assertEquals('rooms/message', $driver::HIPCHAT_REQUEST);
-		$this->assertEquals(-1, $driver::STATUS_BAD_RESPONSE);
-		$this->assertEquals(200, $driver::STATUS_OK);
-		$this->assertEquals(400, $driver::STATUS_BAD_REQUEST);
 	}
 	
 	public function testDriverInit()
@@ -58,5 +77,56 @@ class DriverTest extends PHPUnit_Framework_TestCase
 		$hippy = Hippy::clean();
 		
 		$this->assertEquals(null, $hippy->driver->last_msg);
+	}
+	
+	public function testBadJSONResponse()
+	{
+		$hippy = Hippy::clean(array(
+			'driver' => new BadJSONDriver
+		));
+		
+		try
+		{
+			$hippy->driver->send('Bad JSON test');
+			$this->assertFalse(true);
+		}
+		catch(HippyResponseException $ex)
+		{
+			$this->assertTrue(true);
+		}
+	}
+	
+	public function testMissingStatusField()
+	{
+		$hippy = Hippy::clean(array(
+			'driver' => new MissingStatusDriver
+		));
+		
+		try
+		{
+			$hippy->driver->send('Bad JSON test');
+			$this->assertFalse(true);
+		}
+		catch(HippyResponseException $ex)
+		{
+			$this->assertTrue(true);
+		}
+	}
+	
+	public function testNotSent()
+	{
+		$hippy = Hippy::clean(array(
+			'driver' => new NotSentDriver
+		));
+		
+		try
+		{
+			$hippy->driver->send('Bad JSON test');
+			$this->assertFalse(true);
+		}
+		catch(HippyNotSentException $ex)
+		{
+			$this->assertTrue(true);
+		}
 	}
 }

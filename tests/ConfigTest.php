@@ -12,15 +12,22 @@ class TestDriver extends Hippy_Driver {
 
 class ConfigTest extends PHPUnit_Framework_TestCase
 {
+	protected $config = array();
+	
+	public function __construct()
+	{
+		$this->config = include dirname(__FILE__).'/../Hippy/config.php';
+	}
+	
 	public function testDefaultConfig()
 	{
 		$hippy = Hippy::instance();
 		
-		$this->assertEquals('abc123', $hippy->auth_token);
-		$this->assertEquals('test', $hippy->room_id);
-		$this->assertEquals('Hippy', $hippy->from);
-		$this->assertEquals(1, $hippy->notify);
-		$this->assertEquals('http://api.blunderapp.com/v1/', $hippy->api_endpoint);
+		$this->assertEquals($this->config['token'], $hippy->auth_token);
+		$this->assertEquals($this->config['room'], $hippy->room_id);
+		$this->assertEquals($this->config['from'], $hippy->from);
+		$this->assertEquals((int)$this->config['notify'], $hippy->notify);
+		$this->assertEquals($this->config['api_endpoint'], $hippy->api_endpoint);
 		$this->assertEquals('Hippy_Curl', get_class($hippy->driver));
 	}
 	
@@ -39,7 +46,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 			'from'         => 'Vivalacrowe',
 			'notify'       => false,
 			'api_endpoint' => 'http://company.com/api/',
-			'driver'       => 'socket'
+			'driver'       => 'curl'
 		));
 		
 		$this->assertEquals('wysiwyg', $hippy->auth_token);
@@ -47,29 +54,50 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('Vivalacrowe', $hippy->from);
 		$this->assertEquals(0, $hippy->notify);
 		$this->assertEquals('http://company.com/api/', $hippy->api_endpoint);
-		$this->assertEquals('socket', $hippy->driver);
+		$this->assertEquals('Hippy_Curl', get_class($hippy->driver));
+	}
+	
+	public function testUnknownDriver()
+	{
+		try
+		{
+			$hippy = Hippy::instance(array(
+				'token'        => 'wysiwyg',
+				'room'         => 'hippy',
+				'from'         => 'Vivalacrowe',
+				'notify'       => false,
+				'api_endpoint' => 'http://company.com/api/',
+				'driver'       => 'hello'
+			));
+			
+			$this->assertFalse(true);
+		}
+		catch(HippyUnknownDriverException $ex)
+		{
+			$this->assertTrue(true);
+		}
 	}
 	
 	public function testPartialConfig()
 	{
 		$hippy = Hippy::clean();
 		
-		$this->assertEquals('abc123', $hippy->auth_token);
-		$this->assertEquals('test', $hippy->room_id);
-		$this->assertEquals('Hippy', $hippy->from);
-		$this->assertEquals(1, $hippy->notify);
-		$this->assertEquals('http://api.blunderapp.com/v1/', $hippy->api_endpoint);
+		$this->assertEquals($this->config['token'], $hippy->auth_token);
+		$this->assertEquals($this->config['room'], $hippy->room_id);
+		$this->assertEquals($this->config['from'], $hippy->from);
+		$this->assertEquals((int)$this->config['notify'], $hippy->notify);
+		$this->assertEquals($this->config['api_endpoint'], $hippy->api_endpoint);
 		$this->assertEquals('Hippy_Curl', get_class($hippy->driver));
 		
 		$hippy = Hippy::instance(array(
 			'room' => 'Monkey'
 		));
 		
-		$this->assertEquals('abc123', $hippy->auth_token);
+		$this->assertEquals($this->config['token'], $hippy->auth_token);
 		$this->assertEquals('Monkey', $hippy->room_id);
-		$this->assertEquals('Hippy', $hippy->from);
-		$this->assertEquals(1, $hippy->notify);
-		$this->assertEquals('http://api.blunderapp.com/v1/', $hippy->api_endpoint);
+		$this->assertEquals($this->config['from'], $hippy->from);
+		$this->assertEquals((int)$this->config['notify'], $hippy->notify);
+		$this->assertEquals($this->config['api_endpoint'], $hippy->api_endpoint);
 		$this->assertEquals('Hippy_Curl', get_class($hippy->driver));
 	}
 	
@@ -77,20 +105,20 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 	{
 		$hippy = Hippy::instance(array(), true);
 		
-		$this->assertEquals('abc123', $hippy->auth_token);
-		$this->assertEquals('test', $hippy->room_id);
-		$this->assertEquals('Hippy', $hippy->from);
-		$this->assertEquals(1, $hippy->notify);
-		$this->assertEquals('http://api.blunderapp.com/v1/', $hippy->api_endpoint);
+		$this->assertEquals($this->config['token'], $hippy->auth_token);
+		$this->assertEquals($this->config['room'], $hippy->room_id);
+		$this->assertEquals($this->config['from'], $hippy->from);
+		$this->assertEquals((int)$this->config['notify'], $hippy->notify);
+		$this->assertEquals($this->config['api_endpoint'], $hippy->api_endpoint);
 		$this->assertEquals('Hippy_Curl', get_class($hippy->driver));
 		
 		$hippy = Hippy::instance();
 		
-		$this->assertEquals('abc123', $hippy->auth_token);
-		$this->assertEquals('test', $hippy->room_id);
-		$this->assertEquals('Hippy', $hippy->from);
-		$this->assertEquals(1, $hippy->notify);
-		$this->assertEquals('http://api.blunderapp.com/v1/', $hippy->api_endpoint);
+		$this->assertEquals($this->config['token'], $hippy->auth_token);
+		$this->assertEquals($this->config['room'], $hippy->room_id);
+		$this->assertEquals($this->config['from'], $hippy->from);
+		$this->assertEquals((int)$this->config['notify'], $hippy->notify);
+		$this->assertEquals($this->config['api_endpoint'], $hippy->api_endpoint);
 		$this->assertEquals('Hippy_Curl', get_class($hippy->driver));
 		
 		$hippy = Hippy::clean(array(
@@ -99,7 +127,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 			'from'         => 'Vivalacrowe',
 			'notify'       => false,
 			'api_endpoint' => 'http://company.com/api/',
-			'driver'       => 'socket'
+			'driver'       => 'curl'
 		));
 		
 		$this->assertEquals('wysiwyg', $hippy->auth_token);
@@ -107,7 +135,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('Vivalacrowe', $hippy->from);
 		$this->assertEquals(0, $hippy->notify);
 		$this->assertEquals('http://company.com/api/', $hippy->api_endpoint);
-		$this->assertEquals('socket', $hippy->driver);
+		$this->assertEquals('Hippy_Curl', get_class($hippy->driver));
 	}
 	
 	public function testRuntimeDriver()

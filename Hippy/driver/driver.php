@@ -7,22 +7,6 @@ class Hippy_Driver
 	 */
 	const HIPCHAT_REQUEST = 'rooms/message';
 	
-	/**
-     * Bad response from API
-     */
-    const STATUS_BAD_RESPONSE = -1;
-    
-    /**
-     * Response OK from API
-     */
-    const STATUS_OK = 200;
-    
-    /**
-     * Bad request from API
-     */
-    const STATUS_BAD_REQUEST = 400;
-	
-	
 	protected $config = array();
 	
 	
@@ -54,19 +38,32 @@ class Hippy_Driver
     public function valid_settings()
     {
 		$required = array(
-			'auth_token',
-			'room_id',
-			'from',
-			'api_endpoint',
+			array(
+				'setting' => 'auth_token',
+				'map'     => 'token',
+			),
+			array(
+				'setting' => 'room_id',
+				'map'     => 'room',
+			),
+			array(
+				'setting' => 'from',
+				'map'     => 'from',
+			),
+			array(
+				'setting' => 'api_endpoint',
+				'map'     => 'api_endpoint',
+			),
 		);
-		
-		foreach($required as $key)
-		{
-			if($this->$key === null OR strlen(trim($this->$key)) === 0)
-			{
-				throw new HippyException(static::STATUS_BAD_REQUEST, "Hippy error: info=Settings incorrect, setting=$key");
-			}
-		}
+	
+        foreach($required as $setting)
+        {
+			if($this->$setting['setting'] === null OR strlen(trim($this->$setting['setting'])) === 0)
+            {
+                //Setting not set, throw exception
+				throw new HippyMissingSettingException('Missing setting: '.$setting['map']);
+            }
+        }
 		
 		return true;
     }
@@ -82,28 +79,37 @@ class Hippy_Driver
 		
 		//Build arguments to send to HipChat API
 		$args = array(
-			'format'  => 'json',
-			'message' => $msg,
+			'format'     => 'json',
+			'auth_token' => $this->auth_token,
+			'room_id'    => $this->room_id,
+			'from'       => $this->from,
+			'notify'     => $this->notify,
+			'color'      => $this->color,
+			'message'    => $msg,
 		);
-
-		$api_endpoint = $this->api_endpoint . '?' . http_build_query($args, '', '&');
+		
+		$api_endpoint = $this->api_endpoint . static::HIPCHAT_REQUEST . '?' . http_build_query($args, '', '&');
 		
 		
 		// Now make the request to the api to the API using the selected driver
 		$response = $this->request($api_endpoint);
 		$response = json_decode($response, TRUE);
 		
-		
 		// Make sure the message was sent to Blunder
-		if(!$response)
+		if(!is_array($response))
 		{
-            throw new HippyException(static::STATUS_BAD_RESPONSE, "Invalid JSON recieved: $response", $api_endpoint);
+            throw new HippyResponseException("Invalid JSON recieved", $api_endpoint);
         }
+
+		if(!isset($response['status']))
+		{
+			$msg = 'Response does not contain field `status`';
+			throw new HippyResponseException($msg, $api_endpoint);
+		}
         
         if($response['status'] !== "sent")
         {
-            throw new HippyException(static::STATUS_BAD_RESPONSE, 
-									 "Response states message wasn\'t sent. Response: ".$response['status'], $api_endpoint);
+            throw new HippyNotSentException("Response states message wasn\'t sent. Response: ".$response['status'], $api_endpoint);
         }
 		
 		

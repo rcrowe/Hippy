@@ -1,20 +1,20 @@
 <?php
 
-/**
- * Hippy Exception class.
- */
-class HippyException extends Exception
+class HippyUnknownDriverException extends Exception {};
+class HippyMissingSettingException extends Exception {};
+class HippyEmptyQueueException extends Exception {};
+
+class HippyResponseException extends Exception
 {
-    /**
-     * Exception constructor. Use is to set the error message format.
-     */
-    public function __construct($code, $info, $url = NULL) {
-    
-        $message = "Hippy error: code=$code, info=$info";
+    public function __construct($info, $url = NULL)
+	{    
+        $message = "Hippy error: info=$info";
         
         //Include URL in message if supplied
-        if(!empty($url)) $message .= " url=$url";
+        if(!$url !== null) $message .= " url=$url";
         
-        parent::__construct($message, (int)$code);
+        parent::__construct($message);
     }
 }
+
+class HippyNotSentException extends HippyResponseException {};

@@ -23,9 +23,9 @@ class ValidConfigTest extends PHPUnit_Framework_TestCase
 			$hippy->validSettings();
 			$this->assertFalse(true);
 		}
-		catch(HippyException $ex)
+		catch(HippyMissingSettingException $ex)
 		{
-			$str = 'Hippy error: code=400, info=Hippy error: info=Settings incorrect, setting=auth_token';
+			$str = 'Missing setting: token';
 			$this->assertEquals($str, $ex->getMessage());
 		}
 		
@@ -39,9 +39,9 @@ class ValidConfigTest extends PHPUnit_Framework_TestCase
 			$hippy->validSettings();
 			$this->assertFalse(true);
 		}
-		catch(HippyException $ex)
+		catch(HippyMissingSettingException $ex)
 		{
-			$str = 'Hippy error: code=400, info=Hippy error: info=Settings incorrect, setting=room_id';
+			$str = 'Missing setting: room';
 			$this->assertEquals($str, $ex->getMessage());
 		}
 		
@@ -55,9 +55,9 @@ class ValidConfigTest extends PHPUnit_Framework_TestCase
 			$hippy->validSettings();
 			$this->assertFalse(true);
 		}
-		catch(HippyException $ex)
+		catch(HippyMissingSettingException $ex)
 		{
-			$str = 'Hippy error: code=400, info=Hippy error: info=Settings incorrect, setting=from';
+			$str = 'Missing setting: from';
 			$this->assertEquals($str, $ex->getMessage());
 		}
 		
@@ -71,9 +71,9 @@ class ValidConfigTest extends PHPUnit_Framework_TestCase
 			$hippy->validSettings();
 			$this->assertFalse(true);
 		}
-		catch(HippyException $ex)
+		catch(HippyMissingSettingException $ex)
 		{
-			$str = 'Hippy error: code=400, info=Hippy error: info=Settings incorrect, setting=api_endpoint';
+			$str = 'Missing setting: api_endpoint';
 			$this->assertEquals($str, $ex->getMessage());
 		}
 	}

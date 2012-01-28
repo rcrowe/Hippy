@@ -16,6 +16,13 @@ class SpeakMockDriver extends Hippy_Driver {
 
 class SpeakTest extends PHPUnit_Framework_TestCase
 {
+	protected $config = array();
+	
+	public function __construct()
+	{
+		$this->config = include dirname(__FILE__).'/../Hippy/config.php';
+	}
+	
 	public function testSpeakValidSettings()
 	{
 		try
@@ -23,9 +30,9 @@ class SpeakTest extends PHPUnit_Framework_TestCase
 			Hippy::speak('test', array('room' => ''));
 			$this->assertFalse(true);
 		}
-		catch(HippyException $ex)
+		catch(HippyMissingSettingException $ex)
 		{
-			$this->assertTrue(true);
+			$this->assertEquals('Missing setting: room', $ex->getMessage());
 		}
 	}
 	
@@ -46,14 +53,13 @@ class SpeakTest extends PHPUnit_Framework_TestCase
 			'driver' => new SpeakMockDriver
 		));
 		
-		$details = Hippy::speak("Testing API endpoint");
+		$response = Hippy::speak("Testing API endpoint");
 		
-		$this->assertEquals('http://api.blunderapp.com/v1/?format=json&message=Testing+API+endpoint', 
-							 $details['api_endpoint']);
-	}
-	
-	public function testSpeak()
-	{
+		$expected  = $this->config['api_endpoint'].'rooms/message?format=json&auth_token='.$this->config['token'];
+		$expected .= '&room_id='.$this->config['room'].'&';
+		$expected .= 'from='.$this->config['from'].'&notify='.(int)$this->config['notify'];
+		$expected .= '&color='.$this->config['color'].'&message=Testing+API+endpoint';
 		
+		$this->assertEquals($expected, $response['api_endpoint']);
 	}
 }
