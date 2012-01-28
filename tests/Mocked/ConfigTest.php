@@ -1,7 +1,7 @@
 <?php
 
 // Include Hippy
-include_once dirname(__FILE__).'/../Hippy.php';
+include_once dirname(__FILE__).'/../../Hippy.php';
 
 
 class TestDriver extends Hippy_Driver {
@@ -16,7 +16,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 	
 	public function __construct()
 	{
-		$this->config = include dirname(__FILE__).'/../Hippy/config.php';
+		$this->config = include dirname(__FILE__).'/../../Hippy/config.php';
 	}
 	
 	public function testDefaultConfig()

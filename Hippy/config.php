@@ -2,17 +2,17 @@
 
 return array(
 	
-	'token'  => 'qwerty',
+	'token'  => 'abc123',
 	
-	'room'   => 'rocket',
+	'room'   => 'test room',
 	
-	'from'   => 'Blunder',
+	'from'   => 'Hippy',
 	
-	'notify' => false,
+	'notify' => true,
 	
-	'color'  => 'red',
+	'color'  => 'yellow',
 	
-	'api_endpoint' => 'http://api.blunderapp.com/v2/',
+	'api_endpoint' => 'https://api.hipchat.com/v1/',
 	
 	'driver' => 'curl',
 );

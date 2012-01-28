@@ -1,7 +1,7 @@
 <?php
 
 // Include Hippy
-include_once dirname(__FILE__).'/../Hippy.php';
+include_once dirname(__FILE__).'/../../Hippy.php';
 
 
 class QueueMockDriver extends Hippy_Driver {
@@ -20,7 +20,7 @@ class QueueTest extends PHPUnit_Framework_TestCase
 	
 	public function __construct()
 	{
-		$this->config = include dirname(__FILE__).'/../Hippy/config.php';
+		$this->config = include dirname(__FILE__).'/../../Hippy/config.php';
 	}
 	
 	public function testReturnQueue()
@@ -71,7 +71,7 @@ class QueueTest extends PHPUnit_Framework_TestCase
 		$response = Hippy::go();
 		
 		$expected  = $this->config['api_endpoint'].'rooms/message?format=json&auth_token='.$this->config['token'];
-		$expected .= '&room_id='.$this->config['room'].'&';
+		$expected .= '&room_id='.urlencode($this->config['room']).'&';
 		$expected .= 'from='.$this->config['from'].'&notify='.(int)$this->config['notify'];
 		$expected .= '&color='.$this->config['color'].'&message=Hello+world';
 		
@@ -94,7 +94,7 @@ class QueueTest extends PHPUnit_Framework_TestCase
 		$response = Hippy::go();
 		
 		$expected  = $this->config['api_endpoint'].'rooms/message?format=json&auth_token='.$this->config['token'];
-		$expected .= '&room_id='.$this->config['room'].'&';
+		$expected .= '&room_id='.urlencode($this->config['room']).'&';
 		$expected .= 'from='.$this->config['from'].'&notify='.(int)$this->config['notify'];
 		$expected .= '&color='.$this->config['color'].'&message=';
 		$expected .= 'Test+0%3Cbr+%2F%3ETest+1%3Cbr+%2F%3ETest+2%3Cbr+%2F%3ETest+3%3Cbr+%2F%3E';
@@ -129,7 +129,7 @@ class QueueTest extends PHPUnit_Framework_TestCase
 		$response = Hippy::go(true);
 		
 		$expected  = $this->config['api_endpoint'].'rooms/message?format=json&auth_token='.$this->config['token'];
-		$expected .= '&room_id='.$this->config['room'].'&';
+		$expected .= '&room_id='.urlencode($this->config['room']).'&';
 		$expected .= 'from='.$this->config['from'].'&notify='.(int)$this->config['notify'];
 		$expected .= '&color='.$this->config['color'].'&message=';
 		$expected .= 'Test+0%3Cbr+%2F%3ETest+1%3Cbr+%2F%3ETest+2%3Cbr+%2F%3ETest+3%3Cbr+%2F%3E';
@@ -171,7 +171,7 @@ class QueueTest extends PHPUnit_Framework_TestCase
 		for($i = 0; $i <= 10; $i++)
 		{
 			$expected  = $this->config['api_endpoint'].'rooms/message?format=json&auth_token='.$this->config['token'];
-			$expected .= '&room_id='.$this->config['room'].'&';
+			$expected .= '&room_id='.urlencode($this->config['room']).'&';
 			$expected .= 'from='.$this->config['from'].'&notify='.(int)$this->config['notify'];
 			$expected .= '&color='.$this->config['color'].'&message=Test+'.$i;
 			

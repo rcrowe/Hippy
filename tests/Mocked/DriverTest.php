@@ -1,7 +1,7 @@
 <?php
 
 // Include Hippy
-include_once dirname(__FILE__).'/../Hippy.php';
+include_once dirname(__FILE__).'/../../Hippy.php';
 
 
 class MockDriver extends Hippy_Driver {

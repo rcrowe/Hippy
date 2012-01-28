@@ -1,7 +1,7 @@
 <?php
 
 // Include Hippy
-include_once dirname(__FILE__).'/../Hippy.php';
+include_once dirname(__FILE__).'/../../Hippy.php';
 
 
 class SpeakMockDriver extends Hippy_Driver {
@@ -20,7 +20,7 @@ class SpeakTest extends PHPUnit_Framework_TestCase
 	
 	public function __construct()
 	{
-		$this->config = include dirname(__FILE__).'/../Hippy/config.php';
+		$this->config = include dirname(__FILE__).'/../../Hippy/config.php';
 	}
 	
 	public function testSpeakValidSettings()
@@ -56,7 +56,7 @@ class SpeakTest extends PHPUnit_Framework_TestCase
 		$response = Hippy::speak("Testing API endpoint");
 		
 		$expected  = $this->config['api_endpoint'].'rooms/message?format=json&auth_token='.$this->config['token'];
-		$expected .= '&room_id='.$this->config['room'].'&';
+		$expected .= '&room_id='.urlencode($this->config['room']).'&';
 		$expected .= 'from='.$this->config['from'].'&notify='.(int)$this->config['notify'];
 		$expected .= '&color='.$this->config['color'].'&message=Testing+API+endpoint';
 		

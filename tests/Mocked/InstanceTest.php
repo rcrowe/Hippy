@@ -1,7 +1,7 @@
 <?php
 
 // Include Hippy
-include_once dirname(__FILE__).'/../Hippy.php';
+include_once dirname(__FILE__).'/../../Hippy.php';
 
 
 class InstanceTest extends PHPUnit_Framework_TestCase
