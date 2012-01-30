@@ -31,5 +31,3 @@ Open Source License
 -------------------
 
 Hippy is released under the MIT public license.
-
-<http://www.slimframework.com/license>
