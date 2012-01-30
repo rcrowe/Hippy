@@ -181,4 +181,30 @@ class QueueTest extends PHPUnit_Framework_TestCase
 			$this->assertEquals('sent', $responses[$i]['response']['status']);
 		}
 	}
+	
+	public function testFlushEmptyQueue()
+	{
+		Hippy::clean(array(
+			'driver' => new QueueMockDriver
+		));
+		
+		// Check that the when the queue is empty NULL is returned
+		$response = Hippy::flush_queue();
+		
+		$this->assertEquals(null, $response);
+	}
+	
+	public function testFlushQueue()
+	{
+		Hippy::clean(array(
+			'driver' => new QueueMockDriver
+		));
+		
+		Hippy::add('Hello world');
+		
+		// Check that the when the queue is empty NULL is returned
+		$response = Hippy::flush_queue();
+		
+		$this->assertEquals('Hello world', $response['msg']);
+	}
 }

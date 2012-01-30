@@ -229,8 +229,6 @@ class Hippy
 	 * Add a message to the queue. Message will be bundled as one message with line breaks, then sent with Hippy::go().
 	 *
 	 * @param string $msg Message you want to add the queue and send.
-	 *
-	 * @throws HippyException
 	 */
 	public static function add($msg)
 	{
@@ -243,7 +241,7 @@ class Hippy
 	 *
 	 * @param bool Whether to join the queue of messages and send as one message, or seperate messages. Default TRUE.
 	 * 
-	 * @throws HippyException
+	 * @throws HippyEmptyQueueException
 	 */
 	public static function go($join = true)
 	{
@@ -252,7 +250,6 @@ class Hippy
 		
 		if(count($instance->queue) === 0)
 		{
-			// throw new HippyException($driver::STATUS_BAD_REQUEST, 'Can not send queue. Queue is empty!');
 			throw new HippyEmptyQueueException('Can not send queue. Queue is empty!');
 		}
 		
@@ -275,5 +272,20 @@ class Hippy
 		}
 		
 		return $responses;
+	}
+	
+	/**
+	 * Send any messages that are in the queue. This is the same as Hippy::go apart from no exception is generated.
+	 * 
+	 * @param bool Whether to join the queue of messages and send as one message, or seperate messages. Default TRUE.
+	 */
+	public static function flush_queue($join = true)
+	{
+		$instance = static::instance();
+		
+		if(count($instance->queue) > 0)
+		{
+			return static::go($join);
+		}
 	}
 }
