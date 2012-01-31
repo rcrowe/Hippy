@@ -6,7 +6,7 @@
  * @author Rob "VivaLaCrowe" Crowe <hello@vivalacrowe.com>
  * @license MIT 
  */
-class Hippy_Driver
+abstract class Hippy_Driver
 {
 	/**
 	 * Request to append to the end of the Hipchat API endpoint
@@ -138,5 +138,10 @@ class Hippy_Driver
 			'msg'          => $msg,
 			'response'     => $response,
 		);
+	}
+	
+	public function request($url)
+	{
+		throw new HippyNotSentException('Driver must extend `request`', $url);
 	}
 }
