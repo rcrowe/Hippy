@@ -242,6 +242,9 @@ class Hippy
 	 *
 	 * @param  string  Message
 	 * @param  array   Runtime config options
+	 * @throws HippyMissingSettingException
+	 * @throws HippyResponseException
+	 * @throws HippyNotSentException
 	 */
 	public static function speak($msg, array $config = array())
 	{		
@@ -287,7 +290,15 @@ class Hippy
 			// Sending as one big message
 			$msg = implode('<br />', $instance->queue);
 			
-			return $instance->driver->send($msg);
+			$response = $instance->driver->send($msg);
+			
+			// Clear the queue, an exception would have been called
+			// if there was an error sending
+			static::clear_queue();
+			
+			// Return details about the sent message
+			// Mainly used for testing
+			return $response;
 		}
 		
 		
@@ -299,7 +310,21 @@ class Hippy
 			$responses[] = $instance->driver->send($msg);
 		}
 		
+		// Clear the queue, an exception would have been called
+		// if there was an error sending
+		static::clear_queue();
+		
+		// Return details about the sent messages
+		// Mainly used for testing
 		return $responses;
+	}
+	
+	/**
+	 * Force the message queue empty
+	 */
+	public static function clear_queue()
+	{
+		static::instance()->queue = array();
 	}
 	
 	/**
