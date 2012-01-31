@@ -140,6 +140,11 @@ abstract class Hippy_Driver
 		);
 	}
 	
+	/**
+	 * Driver must extend request.
+	 *
+	 * @param  string  URL of the API endpoint
+	 */
 	public function request($url)
 	{
 		throw new HippyNotSentException('Driver must extend `request`', $url);
