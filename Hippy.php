@@ -1,19 +1,43 @@
 <?php
 
 include_once dirname(__FILE__).'/Hippy/exceptions.php';
-include_once dirname(__FILE__).'/Hippy/driver/driver.php';
+include_once dirname(__FILE__).'/Hippy/driver.php';
 
-
+/**
+ * Hippy - PHP client for HipChat. Designed for incidental notifications from an application.
+ *
+ * Example
+ * -------
+ *
+ * <code>
+ *     require 'Hippy/Hippy.php';
+ *
+ *     Hippy::speak('Did the build succedded');
+ *
+ *     Hippy::add('Or even');
+ *     Hippy::add('queue some messages');
+ *     Hippy::go();
+ * </code>
+ *
+ * @author Rob "VivaLaCrowe" Crowe <hello@vivalacrowe.com>
+ * @license MIT
+ */
 class Hippy
 {
+	/**
+	 * @var  Hippy
+	 */
 	protected static $instance;
+	
+	/**
+	 * @var  array  Hippy settings. Loads Hippy/config.php in by default
+	 */
 	protected $config = array();
 	
 	/**
-	 * Instead of sending a message straight away queue it up with add() and send with go()
+	 * @var  array  Instead of sending a message straight away queue it up with add() and send with go()
 	 */
 	protected $queue  = array();
-	
 	
 	/**
 	 * This method is deprecated, use instance() instead.
@@ -28,17 +52,17 @@ class Hippy
 	/**
 	 * Create Hippy object
 	 *
-	 * @param   array  Hippy config options
-	 * @param   bool   Retrieve a clean instance of Hippy. See clean()
-	 * @return  Hippy
+	 * @param	array  Hippy config options
+	 * @param	bool   Retrieve a clean instance of Hippy. See clean()
+	 * @return	Hippy
 	 */
 	public static function instance(array $config = array(), $clean = false)
 	{
 		if(!isset(self::$instance) OR $clean)
-        {
+		{
 			$class = __CLASS__;
-            static::$instance = new $class;
-        }
+			static::$instance = new $class;
+		}
 		
 		// If no config has been set, load the default
 		if(count(static::$instance->config) === 0)
@@ -71,8 +95,8 @@ class Hippy
 	 * Get the value of a config variable or return the current queue of messages
 	 * if there are any.
 	 *
-	 * @param   string  Name of the config variable
-	 * @return  mixed
+	 * @param	string	Name of the config variable
+	 * @return	mixed
 	 */
 	public function __get($name)
 	{
@@ -85,67 +109,67 @@ class Hippy
 	}
 	
 	/**
-     * Deprecated as of 0.5, use $hippy->api_endpoint. Returns URL to API endpoint
-     *
-     * @deprecated since 0.5
-     * @return String
-     */
-    public function endpoint()
-    {
-        return $this->api_endpoint;
-    }
+	 * Deprecated as of 0.5, use $hippy->api_endpoint. Returns URL to API endpoint
+	 *
+	 * @deprecated since 0.5
+	 * @return String
+	 */
+	public function endpoint()
+	{
+		return $this->api_endpoint;
+	}
 
 	/**
-     * Deprecated as of 0.5, use Hippy::instance($config). Set configuration for all Hippy messages
-     *
+	 * Deprecated as of 0.5, use Hippy::instance($config). Set configuration for all Hippy messages
+	 *
 	 * @deprecated since 0.5
-     * @param  Array $config Settings to set
-     * @return Array Settings
-     */
-    public static function config($config = null)
-    {
-        $instance = static::instance();
-        
-        //Set any settings if passed in
-        if(!is_null($config) AND is_array($config))
-        {
-            $instance->settings($config);
-        }
-        
-        //Return new merged settings
-        return $instance->config;
-    }
+	 * @param  Array $config Settings to set
+	 * @return Array Settings
+	 */
+	public static function config($config = null)
+	{
+		$instance = static::instance();
+		
+		//Set any settings if passed in
+		if(!is_null($config) AND is_array($config))
+		{
+			$instance->settings($config);
+		}
+		
+		//Return new merged settings
+		return $instance->config;
+	}
 	
 	/**
-     * Sets valid settings. Renames shorthand to full names to meet API requirements
-     *
-     * @param Array $config Settings to set
-     */
+	 * Sets valid settings. Renames shorthand to full names to meet API requirements
+	 *
+	 * @param Array $config Settings to set
+	 */
 	protected function settings(array $config)
 	{
 		//Rename `token` to use correct name `auth_token`
-        if(isset($config['token']))
+		if(isset($config['token']))
 		{
-            $this->config['auth_token'] = $config['token'];
-            unset($config['token']);
-        }
-        
-        //Rename `room` to use correct name `room_id`
-        if(isset($config['room']))
+			$this->config['auth_token'] = $config['token'];
+			unset($config['token']);
+		}
+		
+		//Rename `room` to use correct name `room_id`
+		if(isset($config['room']))
 		{
-            $this->config['room_id'] = $config['room'];
-            unset($config['room']);
-        }
-        
-        //Convert boolean notify flag to integer
-        if(isset($config['notify']))
+			$this->config['room_id'] = $config['room'];
+			unset($config['room']);
+		}
+		
+		//Convert boolean notify flag to integer
+		if(isset($config['notify']))
 		{
-            $this->config['notify'] = (int)$config['notify'];
-            unset($config['notify']);
-        }
+			$this->config['notify'] = (int)$config['notify'];
+			unset($config['notify']);
+		}
 
 		// Merge any other settings
-        $this->config = array_merge($this->config, $config);
+		$this->config = array_merge($this->config, $config);
 		
 		// Load the driver
 		if(isset($config['driver']))
@@ -175,45 +199,50 @@ class Hippy
 	}
 	
 	/**
-     * Checks that neccessery settings are set before attempting to send a new message
-     *
-     * @deprecated since 0.5 - Use Hippy_Driver::valid_settings() to check this.
-     * @throws HippyException
-     */
-    public function validSettings()
-    {
+	 * Checks that neccessery settings are set before attempting to send a new message
+	 *
+	 * @deprecated since 0.5 - Use Hippy_Driver::valid_settings() to check this.
+	 * @throws HippyException
+	 */
+	public function validSettings()
+	{
 		$required = array(
 			array(
 				'setting' => 'auth_token',
-				'map'     => 'token',
+				'map'	  => 'token',
 			),
 			array(
 				'setting' => 'room_id',
-				'map'     => 'room',
+				'map'	  => 'room',
 			),
 			array(
 				'setting' => 'from',
-				'map'     => 'from',
+				'map'	  => 'from',
 			),
 			array(
 				'setting' => 'api_endpoint',
-				'map'     => 'api_endpoint',
+				'map'	  => 'api_endpoint',
 			),
 		);
 	
-        foreach($required as $setting)
-        {
+		foreach($required as $setting)
+		{
 			if($this->$setting['setting'] === null OR strlen(trim($this->$setting['setting'])) === 0)
-            {
-                //Setting not set, throw exception
+			{
+				//Setting not set, throw exception
 				throw new HippyMissingSettingException('Missing setting: '.$setting['map']);
-            }
-        }
+			}
+		}
 
 		return true;
-    }
+	}
 
-
+	/**
+	 * Send a single message to your Hipchat room.
+	 *
+	 * @param  string  Message
+	 * @param  array   Runtime config options
+	 */
 	public static function speak($msg, array $config = array())
 	{		
 		$instance = static::instance();
@@ -232,7 +261,7 @@ class Hippy
 	 */
 	public static function add($msg)
 	{
-		$instance          = static::instance();
+		$instance		   = static::instance();
 		$instance->queue[] = $msg; //Add message to queue
 	}
 	
@@ -240,13 +269,12 @@ class Hippy
 	 * Joins all the messages in the queue together with a line break and sends it.
 	 *
 	 * @param bool Whether to join the queue of messages and send as one message, or seperate messages. Default TRUE.
-	 * 
 	 * @throws HippyEmptyQueueException
 	 */
 	public static function go($join = true)
 	{
 		$instance = static::instance();
-		$driver   = $instance->driver;
+		$driver	  = $instance->driver;
 		
 		if(count($instance->queue) === 0)
 		{

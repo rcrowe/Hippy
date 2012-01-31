@@ -62,4 +62,13 @@ class SpeakTest extends PHPUnit_Framework_TestCase
 		
 		$this->assertEquals($expected, $response['api_endpoint']);
 	}
+	
+	public function testWoo()
+	{
+		Hippy::clean();
+		$response = Hippy::speak("Hello world");
+		
+		print_r($response);
+		die();
+	}
 }

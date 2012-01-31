@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Validates and hands of the actual sending of the message to the driver
+ *
+ * @author Rob "VivaLaCrowe" Crowe <hello@vivalacrowe.com>
+ * @license MIT 
+ */
 class Hippy_Driver
 {
 	/**
@@ -7,9 +13,16 @@ class Hippy_Driver
 	 */
 	const HIPCHAT_REQUEST = 'rooms/message';
 	
+	/**
+	 * Hold the final set of config options were using to send the message with
+	 */
 	protected $config = array();
 	
-	
+	/**
+	 * Initialise the driver with the final set of config options
+	 *
+	 * @param  array  Config
+	 */
 	public function init(array $config)
 	{
 		$this->config = array_merge($this->config, $config);
@@ -68,6 +81,11 @@ class Hippy_Driver
 		return true;
     }
 
+	/**
+	 * Format the message and pass the message of to the driver to be sent
+	 * 
+	 * @param  string  Message to send to Hipchat
+	 */
 	public function send($msg)
 	{
 		// Validate settings before we try sending
