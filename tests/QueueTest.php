@@ -207,4 +207,44 @@ class QueueTest extends PHPUnit_Framework_TestCase
 		
 		$this->assertEquals('Hello world', $response['msg']);
 	}
+	
+	public function testEmptyQueue()
+	{
+		$instance = Hippy::clean();
+		
+		Hippy::add('Message 1');
+		Hippy::add('Message 2');
+		
+		$this->assertEquals(2, count($instance->queue));
+		
+		Hippy::clear_queue();
+		
+		$this->assertEquals(0, count($instance->queue));
+	}
+	
+	public function testGoEmptyQueue()
+	{
+		$instance = Hippy::clean(array(
+			'driver' => new QueueMockDriver
+		));
+		
+		Hippy::add('Message 1');
+		
+		$this->assertEquals(1, count($instance->queue));
+		
+		Hippy::go();
+		
+		$this->assertEquals(0, count($instance->queue));
+		
+		
+		Hippy::add('Message 1');
+		Hippy::add('Message 2');
+		Hippy::add('Message 3');
+		
+		$this->assertEquals(3, count($instance->queue));
+		
+		Hippy::go();
+		
+		$this->assertEquals(0, count($instance->queue));
+	}
 }
