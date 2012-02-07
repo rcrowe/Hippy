@@ -1,6 +1,8 @@
 Hippy
 =====
 
+[![Build Status](https://secure.travis-ci.org/rcrowe/Hippy.png)](http://travis-ci.org/rcrowe/Hippy)
+
 Hippy is a simple PHP client for sending messages to a HipChat room. It is designed for incidental notifications from an application.
 
 Hippy v0.5 was mostly rewritten, however I've tried to keep backwards compatibility but going forward this will be lost. Note that Hippy now throws a number of exceptions so make sure your try and catching.
