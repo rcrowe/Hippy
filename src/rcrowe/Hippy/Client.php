@@ -103,7 +103,7 @@ class Client
 
     public function send(SenderInterface $msg)
     {
-        $messages = (!is_a($msg, 'rcrowe\Hippy\Message\Queue')) ? [$msg] : $msg;
+        $messages = (!is_a($msg, 'rcrowe\Hippy\Message\Queue')) ? array($msg) : $msg;
 
         foreach ($messages as $message) {
             $this->transport->send($message);
