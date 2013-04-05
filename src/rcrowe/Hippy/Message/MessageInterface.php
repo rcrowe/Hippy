@@ -15,8 +15,45 @@ namespace rcrowe\Hippy\Message;
  */
 interface MessageInterface
 {
+    /**
+     * @var string Message format is plain text.
+     */
     const FORMAT_TEXT = 'text';
+
+    /**
+     * @var string Message format is html.
+     */
     const FORMAT_HTML = 'html';
+
+    /**
+     * @var string Message background color is yellow.
+     */
+    const BACKGROUND_YELLOW = 'yellow';
+
+    /**
+     * @var string Message background color is red.
+     */
+    const BACKGROUND_RED = 'red';
+
+    /**
+     * @var string Message background color is green.
+     */
+    const BACKGROUND_GREEN = 'green';
+
+    /**
+     * @var string Message background color is purple.
+     */
+    const BACKGROUND_PURPLE = 'purple';
+
+    /**
+     * @var string Message background color is gray.
+     */
+    const BACKGROUND_GRAY = 'gray';
+
+    /**
+     * @var string Message background color is random.
+     */
+    const BACKGROUND_RANDOM = 'random';
 
     /**
      * Get a new instance of message.
