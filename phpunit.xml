@@ -36,7 +36,7 @@
             <directory suffix=".php">./vendor</directory>
         </blacklist>
     </filter>
-<!--     <logging>
+    <!-- <logging>
         <log type="coverage-html" target="build/coverage" charset="UTF-8" />
     </logging> -->
 </phpunit>

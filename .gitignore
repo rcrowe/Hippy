@@ -19,3 +19,6 @@ tmtags
 ## Composer
 composer.lock
 vendor
+
+## Build
+build/coverage
