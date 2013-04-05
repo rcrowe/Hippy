@@ -45,12 +45,12 @@ class SendTest extends \PHPUnit_Framework_TestCase
 
         $transport = new Guzzle('123', 'cog', 'vivalacrowe');
         $transport->setHttp($http);
-        $guzzle = new Hippy($transport);
+        $hippy = new Hippy($transport);
 
         $queue = new Queue;
         $queue->add(new Message(true, 'red'));
         $queue->add(new Message(false, 'random'));
 
-        $guzzle->send($queue);
+        $hippy->send($queue);
     }
 }
