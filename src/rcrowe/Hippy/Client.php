@@ -4,10 +4,6 @@ namespace rcrowe\Hippy;
 
 /*
 
-$token
-$room
-$from
-
 $transport = new rcrowe\Hippy\Transport\Guzzle($token, $room, $from);
 $hippy = new rcrowe\Hippy\Client($transport);
 
@@ -107,7 +103,6 @@ class Client
 
     public function send(SenderInterface $msg)
     {
-        $this->transport->init($this->getToken(), $this->getRoom(), $this->getFrom());
         $messages = (!is_a($msg, 'rcrowe\Hippy\Message\Queue')) ? [$msg] : $msg;
 
         foreach ($messages as $message) {

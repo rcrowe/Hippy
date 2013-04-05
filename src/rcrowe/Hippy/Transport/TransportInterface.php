@@ -15,5 +15,7 @@ interface TransportInterface
     public function setFrom($from);
     public function getEndpoint();
     public function setEndpoint($endpoint);
+    public function getHeaders();
+    public function setHeaders(array $headers);
     public function send(MessageInterface $message);
 }

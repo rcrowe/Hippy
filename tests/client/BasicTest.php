@@ -1,6 +1,6 @@
 <?php
 
-namespace rcrowe\Hippy\Tests\Instance;
+namespace rcrowe\Hippy\Tests\Client;
 
 use rcrowe\Hippy\Client as Hippy;
 use rcrowe\Hippy\Transport\Guzzle as Transport;

@@ -16,8 +16,8 @@
         <server name="CAMPFIRE_KEY" value="" />
     </php>
     <testsuites>
-        <testsuite name="instance">
-            <directory suffix="Test.php">tests/instance</directory>
+        <testsuite name="client">
+            <directory suffix="Test.php">tests/client</directory>
         </testsuite>
         <testsuite name="message">
             <directory suffix="Test.php">tests/message</directory>
@@ -25,12 +25,18 @@
         <testsuite name="queue">
             <directory suffix="Test.php">tests/queue</directory>
         </testsuite>
+        <testsuite name="transport">
+            <directory suffix="Test.php">tests/transport</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <blacklist>
             <directory suffix=".php">PEAR_INSTALL_DIR</directory>
             <directory suffix=".php">PHP_LIBDIR</directory>
-            <directory suffix=".php">../vendor</directory>
+            <directory suffix=".php">./vendor</directory>
         </blacklist>
     </filter>
+<!--     <logging>
+        <log type="coverage-html" target="build/coverage" charset="UTF-8" />
+    </logging> -->
 </phpunit>
