@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * PHP client for HipChat. Designed for incidental notifications from an application.
+ *
+ * @author Rob Crowe <hello@vivalacrowe.com>
+ * @copyright Copyright (c) 2013, Rob Crowe.
+ * @license MIT
+ */
+
 namespace rcrowe\Hippy;
 
 /*
@@ -20,12 +28,6 @@ $queue->add($message);
 
 $hippy->send($message);
 $hippy->send($queue);
-
-
-Hippy::instance($config, $transport, $message, $queue);
-Hippy::speak('message', $config);
-Hippy::add('message', $config);
-Hippy::go();
 
 */
 

@@ -117,7 +117,8 @@ class Guzzle implements TransportInterface
             'color'          => $message->getBackgroundColor(),
             'format'         => 'json',
         );
+        $data = http_build_query($data, '', '&');
 
-        return $this->http->post($this->getUri(), $this->getHeaders(), http_build_query($data))->send();
+        return $this->http->post($this->getUri(), $this->getHeaders(), $data)->send();
     }
 }
