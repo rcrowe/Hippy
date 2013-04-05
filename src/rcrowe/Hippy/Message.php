@@ -18,6 +18,11 @@ class Message implements SenderInterface, MessageInterface
         $this->background_color = $background_color;
     }
 
+    public function isQueue()
+    {
+        return false;
+    }
+
     /**
      * {@inheritdoc}
      */

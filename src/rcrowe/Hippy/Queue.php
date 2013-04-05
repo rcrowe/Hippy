@@ -14,6 +14,11 @@ class Queue implements SenderInterface, \ArrayAccess, \Iterator, \Countable
      */
     protected $container = array();
 
+    public function isQueue()
+    {
+        return true;
+    }
+
     /**
      * Add an item to the queue.
      *
