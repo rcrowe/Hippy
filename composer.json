@@ -1,0 +1,25 @@
+{
+    "name": "rcrowe/Hippy",
+    "description": "PHP client for HipChat. Designed for incidental notifications from an application.",
+    "homepage": "https://github.com/rcrowe/Hippy",
+    "license": "MIT",
+    "keywords": ["hipchat", "chat", "message", "notification"],
+    "authors": [
+        {
+            "name": "Rob Crowe",
+            "email": "hello@vivalacrowe.com"
+        }
+    ],
+    "type": "library",
+    "require": {
+        "php": ">=5.3.2",
+        "guzzle/guzzle": "3.0.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "mockery/mockery": "*"
+    },
+    "autoload": {
+        "psr-0": { "rcrowe\\Hippy": "src/" }
+    }
+}
