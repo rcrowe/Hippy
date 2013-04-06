@@ -15,3 +15,10 @@ tmtags
 
 ## PHPDoc files
 *.ini
+
+## Composer
+composer.lock
+vendor
+
+## Build
+build
