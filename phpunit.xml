@@ -14,6 +14,9 @@
         <testsuite name="client">
             <directory suffix="Test.php">tests/client</directory>
         </testsuite>
+        <testsuite name="facade">
+            <directory suffix="Test.php">tests/facade</directory>
+        </testsuite>
         <testsuite name="message">
             <directory suffix="Test.php">tests/message</directory>
         </testsuite>
@@ -31,7 +34,7 @@
             <directory suffix=".php">./vendor</directory>
         </blacklist>
     </filter>
-    <logging>
+    <!-- <logging>
         <log type="coverage-html" target="build/coverage" charset="UTF-8" />
-    </logging>
+    </logging> -->
 </phpunit>
