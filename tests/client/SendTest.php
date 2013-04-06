@@ -1,8 +1,5 @@
 <?php
 
-// check send is called once with one message
-// check send is called multiple times when queue is used
-
 namespace rcrowe\Hippy\Tests\Client;
 
 use Mockery as m;
