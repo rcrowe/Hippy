@@ -1,5 +1,5 @@
 {
-    "name": "rcrowe/Hippy",
+    "name": "rcrowe/hippy",
     "description": "PHP client for HipChat. Designed for incidental notifications from an application.",
     "homepage": "https://github.com/rcrowe/Hippy",
     "license": "MIT",
