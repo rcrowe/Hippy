@@ -3,6 +3,8 @@
 namespace rcrowe\Hippy\Tests\Message;
 
 use rcrowe\Hippy\Message;
+use InvalidArgumentException;
+use Exception;
 
 class MessageTest extends \PHPUnit_Framework_TestCase
 {
@@ -32,37 +34,47 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($message->getNotification());
     }
 
-    public function testSetBackgroundColor()
+    public function testPlainMessageLength()
     {
-        $message = new Message(false, 'green');
-        $this->assertEquals($message->getBackgroundColor(), 'green');
+        $msg = str_pad('', 9999, 'jnk3j1');
+        $message = new Message;
+        $message->setText($msg);
 
-        $message = new Message(false, 'red');
-        $message->setBackgroundColor('random');
-        $this->assertEquals($message->getBackgroundColor(), 'random');
+        $msg = str_pad('', 10000, 'jnk3j1');
+        $message = new Message;
+        $message->setText($msg);
+
+        try {
+            $msg = str_pad('', 10001, 'jnk3j1');
+            $message = new Message;
+            $message->setText($msg);
+            $this->assertFalse(true);
+        } catch (InvalidArgumentException $ex) {
+            $this->assertEquals($ex->getMessage(), 'Message more than 10,000 characters');
+        } catch (Exception $ex) {
+            $this->assertFalse(true);
+        }
     }
 
-    public function testSetHtml()
+    public function testHtmlMessageLength()
     {
+        $msg = str_pad('', 9999, 'jnk3j1');
         $message = new Message;
-        $message->setHtml('<a href="#">hello</a>');
+        $message->setHtml($msg);
 
-        // $this->markTestSkipped('Should be encoded, but things break');
-        // $this->assertEquals($message->getMessage(), '&lt;a href=&quot;#&quot;&gt;hello&lt;/a&gt;');
-
-        $this->assertEquals($message->getMessage(), '<a href="#">hello</a>');
-        $this->assertEquals($message->getMessageFormat(), Message::FORMAT_HTML);
-    }
-
-    public function testSetText()
-    {
+        $msg = str_pad('', 10000, 'jnk3j1');
         $message = new Message;
+        $message->setHtml($msg);
 
-        $message->setText('egg and spoon race');
-        $this->assertEquals($message->getMessage(), 'egg and spoon race');
-
-        $message->setText('<a href="#">hello</a>');
-        $this->assertEquals($message->getMessage(), '<a href="#">hello</a>');
-        $this->assertEquals($message->getMessageFormat(), Message::FORMAT_TEXT);
+        try {
+            $msg = str_pad('', 10001, 'jnk3j1');
+            $message = new Message;
+            $message->setHtml($msg);
+            $this->assertFalse(true);
+        } catch (InvalidArgumentException $ex) {
+            $this->assertEquals($ex->getMessage(), 'Message more than 10,000 characters');
+        } catch (Exception $ex) {
+            $this->assertFalse(true);
+        }
     }
 }

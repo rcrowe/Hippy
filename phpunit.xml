@@ -10,11 +10,6 @@
          stopOnFailure="false"
          syntaxCheck="false">
 
-    <php>
-        <server name="CAMPFIRE_SUBDOMAIN" value="" />
-        <server name="CAMPFIRE_ROOM" value="" />
-        <server name="CAMPFIRE_KEY" value="" />
-    </php>
     <testsuites>
         <testsuite name="client">
             <directory suffix="Test.php">tests/client</directory>
@@ -36,7 +31,7 @@
             <directory suffix=".php">./vendor</directory>
         </blacklist>
     </filter>
-    <!-- <logging>
+    <logging>
         <log type="coverage-html" target="build/coverage" charset="UTF-8" />
-    </logging> -->
+    </logging>
 </phpunit>

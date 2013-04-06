@@ -12,6 +12,7 @@ namespace rcrowe\Hippy;
 
 use rcrowe\Hippy\Message\SenderInterface;
 use rcrowe\Hippy\Message\MessageInterface;
+use InvalidArgumentException;
 
 /**
  * Holds the message and meta data about the message.
@@ -41,7 +42,7 @@ class Message implements SenderInterface, MessageInterface
     /**
      * {@inheritdoc}
      */
-    public function __construct($notify = false, $background_color = 'yellow')
+    public function __construct($notify = false, $background_color = self::BACKGROUND_YELLOW)
     {
         // Use constant for the color
         $this->notification     = $notify;
@@ -117,6 +118,10 @@ class Message implements SenderInterface, MessageInterface
      */
     protected function setMessage($text, $format)
     {
+        if (strlen($text) > 10000) {
+            throw new InvalidArgumentException('Message more than 10,000 characters');
+        }
+
         // throw exception if longer than 10,000 chars
         $this->message        = $text;
         $this->message_format = $format;

@@ -1,10 +1,21 @@
 <?php
 
+/**
+ * PHP client for HipChat. Designed for incidental notifications from an application.
+ *
+ * @author Rob Crowe <hello@vivalacrowe.com>
+ * @copyright Copyright (c) 2013, Rob Crowe.
+ * @license MIT
+ */
+
 namespace rcrowe\Hippy;
 
 use rcrowe\Hippy\Message\SenderInterface;
 use rcrowe\Hippy\Message\MessageInterface;
 
+/**
+ * Store multiple messages before sending them all at once.
+ */
 class Queue implements SenderInterface, \ArrayAccess, \Iterator, \Countable
 {
     /**

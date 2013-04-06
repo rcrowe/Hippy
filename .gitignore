@@ -21,4 +21,4 @@ composer.lock
 vendor
 
 ## Build
-build/coverage
+build
