@@ -24,6 +24,7 @@ interface TransportInterface
      * @param string|int $room     Room to send message to.
      * @param string     $from     Who the message is from.
      * @param string     $endpoint API host.
+     * @throws InvalidArgumentException When endpoint is not a valid URL.
      */
     public function __construct($token, $room, $from, $endpoint);
 
@@ -106,6 +107,8 @@ interface TransportInterface
      * Send the message.
      *
      * @param \rcrowe\Hippy\Message\MessageInterface $message
+     * @throws InvalidArgumentException When required params not set
+     * @throws \Guzzle\Common\Exception\GuzzleException
      * @return void
      */
     public function send(MessageInterface $message);

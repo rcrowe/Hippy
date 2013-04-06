@@ -114,6 +114,7 @@ class Message implements SenderInterface, MessageInterface
     /**
      * @param string $text
      * @param string format
+     * @throws InvalidArgumentException If message length is greater than 10000 characters
      * @return void
      */
     protected function setMessage($text, $format)

@@ -103,6 +103,7 @@ interface MessageInterface
      * Set the message as HTML.
      *
      * @param string $html
+     * @throws InvalidArgumentException If message length is greater than 10000 characters
      * @return void
      */
     public function setHtml($html);
@@ -111,6 +112,7 @@ interface MessageInterface
      * Set the message as plain text.
      *
      * @param string $text
+     * @throws InvalidArgumentException If message length is greater than 10000 characters
      * @return void
      */
     public function setText($text);

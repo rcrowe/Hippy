@@ -20,11 +20,34 @@ use Guzzle\Http\ClientInterface as HttpInterface;
  */
 class Guzzle implements TransportInterface
 {
+    /**
+     * @var string
+     */
     protected $token;
+
+    /**
+     * @var string|int
+     */
     protected $room;
+
+    /**
+     * @var string
+     */
     protected $from;
+
+    /**
+     * @var string
+     */
     protected $endpoint;
+
+    /**
+     * @var \Guzzle\Http\ClientInterface
+     */
     protected $http;
+
+    /**
+     * @var array
+     */
     protected $headers = array(
         'Content-type' => 'application/x-www-form-urlencoded'
     );
