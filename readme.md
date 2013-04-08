@@ -38,6 +38,8 @@ $hippy->send($message);
 Hippy also provides a static interface just like v0.5 and below.
 
 ```php
+use rcrowe\Hippy\Facade as Hippy;
+
 Hippy::init($token, $room, $from);
 Hippy::html('<a href="#">test failed</a>');
 ```
