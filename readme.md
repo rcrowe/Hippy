@@ -51,6 +51,11 @@ Hippy::addHtml('test 2');
 Hippy::go();
 ```
 
+Phing
+-----
+
+Use [Phing](http://www.phing.info/) for builds and want to send messages to Hipchat? Then checkout out [phing-hipchat](https://github.com/rcrowe/phing-hipchat).
+
 Tests
 -----
 
