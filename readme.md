@@ -29,7 +29,7 @@ Usage
 $transport = new rcrowe\Hippy\Transport\Guzzle($token, $room, $from);
 $hippy = new rcrowe\Hippy\Client($transport);
 
-$message = new rcrowe\Hippy\Message(true, Message::BACKGROUND_YELLOW);
+$message = new rcrowe\Hippy\Message(true, rcrowe\Hippy\Message\Message::BACKGROUND_YELLOW);
 $message->setText('test');
 
 $hippy->send($message);
