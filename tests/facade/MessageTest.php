@@ -3,7 +3,7 @@
 namespace rcrowe\Hippy\Tests\Facade;
 
 use rcrowe\Hippy\Facade as Hippy;
-use rcrowe\Hippy\Transport\Guzzle;
+use rcrowe\Hippy\Transport\APIVersion1;
 use Mockery as m;
 use ReflectionClass;
 
@@ -86,7 +86,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
             http_build_query($data)
         )->andReturn($entity)->once();
 
-        $transport = new Guzzle('123', 'egg', 'spoon');
+        $transport = new APIVersion1('123', 'egg', 'spoon');
         $transport->setHttp($http);
 
         Hippy::init(null, null, null, $transport);
@@ -116,7 +116,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
             http_build_query($data)
         )->andReturn($entity)->once();
 
-        $transport = new Guzzle('123', 'egg', 'spoon');
+        $transport = new APIVersion1('123', 'egg', 'spoon');
         $transport->setHttp($http);
 
         Hippy::init(null, null, null, $transport);
@@ -160,7 +160,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $http = m::mock('Guzzle\Http\Client');
         $http->shouldReceive('post')->andReturn($entity)->times(3);
 
-        $transport = new Guzzle('123', 'egg', 'spoon');
+        $transport = new APIVersion1('123', 'egg', 'spoon');
         $transport->setHttp($http);
 
         Hippy::init(null, null, null, $transport);

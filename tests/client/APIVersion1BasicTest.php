@@ -3,9 +3,9 @@
 namespace rcrowe\Hippy\Tests\Client;
 
 use rcrowe\Hippy\Client as Hippy;
-use rcrowe\Hippy\Transport\Guzzle as Transport;
+use rcrowe\Hippy\Transport\APIVersion1 as Transport;
 
-class BasicTest extends \PHPUnit_Framework_TestCase
+class APIVersion1BasicTest extends \PHPUnit_Framework_TestCase
 {
     public function testToken()
     {
@@ -50,7 +50,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
     {
         $transport = new Transport(null, null, null);
         $hippy = new Hippy($transport);
-        $this->assertEquals(get_class($hippy->getTransport()), 'rcrowe\Hippy\Transport\Guzzle');
+        $this->assertEquals(get_class($hippy->getTransport()), 'rcrowe\Hippy\Transport\APIVersion1');
 
         $transport = new Transport(null, null, null);
         $transport->helloWorld = 'egg';

@@ -10,7 +10,7 @@
 
 namespace rcrowe\Hippy;
 
-use rcrowe\Hippy\Transport\Guzzle;
+use rcrowe\Hippy\Transport\APIVersion1;
 use rcrowe\Hippy\Client;
 use rcrowe\Hippy\Queue;
 use rcrowe\Hippy\Message;
@@ -42,7 +42,7 @@ class Facade
     public static function init($token, $room, $from, $transport = null)
     {
         if ($transport === null) {
-            $transport = new Guzzle($token, $room, $from);
+            $transport = new APIVersion1($token, $room, $from);
         }
 
         static::$client = new Client($transport);

@@ -3,7 +3,7 @@
 namespace rcrowe\Hippy\Tests\Facade;
 
 use rcrowe\Hippy\Facade as Hippy;
-use rcrowe\Hippy\Transport\Guzzle;
+use rcrowe\Hippy\Transport\APIVersion1;
 use ReflectionClass;
 
 class InitTest extends \PHPUnit_Framework_TestCase
@@ -24,7 +24,7 @@ class InitTest extends \PHPUnit_Framework_TestCase
 
     public function testCustomTransportInit()
     {
-        $guzzle = new Guzzle('54321', 'cog', 'vivalacrowe');
+        $guzzle = new APIVersion1('54321', 'cog', 'vivalacrowe');
         Hippy::init('123', 'hippy', 'Rob', $guzzle);
 
         list($client, $queue) = $this->getObjects();

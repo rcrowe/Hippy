@@ -4,11 +4,11 @@ namespace rcrowe\Hippy\Tests\Client;
 
 use Mockery as m;
 use rcrowe\Hippy\Client as Hippy;
-use rcrowe\Hippy\Transport\Guzzle;
+use rcrowe\Hippy\Transport\APIVersion1;
 use rcrowe\Hippy\Message;
 use rcrowe\Hippy\Queue;
 
-class SendTest extends \PHPUnit_Framework_TestCase
+class APIVersion1SendTest extends \PHPUnit_Framework_TestCase
 {
     public function tearDown()
     {
@@ -23,7 +23,7 @@ class SendTest extends \PHPUnit_Framework_TestCase
         $http = m::mock('Guzzle\Http\Client');
         $http->shouldReceive('post')->andReturn($entity)->once();
 
-        $transport = new Guzzle('123', 'cog', 'vivalacrowe');
+        $transport = new APIVersion1('123', 'cog', 'vivalacrowe');
         $transport->setHttp($http);
         $guzzle = new Hippy($transport);
 
@@ -40,7 +40,7 @@ class SendTest extends \PHPUnit_Framework_TestCase
         $http = m::mock('Guzzle\Http\Client');
         $http->shouldReceive('post')->andReturn($entity)->twice();
 
-        $transport = new Guzzle('123', 'cog', 'vivalacrowe');
+        $transport = new APIVersion1('123', 'cog', 'vivalacrowe');
         $transport->setHttp($http);
         $hippy = new Hippy($transport);
 

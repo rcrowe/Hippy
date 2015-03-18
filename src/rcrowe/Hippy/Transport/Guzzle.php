@@ -18,7 +18,7 @@ use Guzzle\Http\ClientInterface as HttpInterface;
 /**
  * Uses Guzzle to send the message to Hipchat. Uses cURL.
  */
-class Guzzle implements TransportInterface
+abstract class Guzzle implements TransportInterface
 {
     /**
      * @var string
@@ -49,13 +49,13 @@ class Guzzle implements TransportInterface
      * @var array
      */
     protected $headers = array(
-        'Content-type' => 'application/x-www-form-urlencoded'
+        'Content-type' => 'application/json'
     );
 
     /**
      * {@inheritdoc}
      */
-    public function __construct($token, $room, $from, $endpoint = 'https://api.hipchat.com/v1/')
+    public function __construct($token, $room, $from, $endpoint = null)
     {
         $this->token = $token;
         $this->room  = $room;
@@ -172,16 +172,6 @@ class Guzzle implements TransportInterface
     }
 
     /**
-     * Uri of the request URL to the Hipchat API.
-     *
-     * @return string
-     */
-    protected function getUri()
-    {
-        return 'rooms/message?format=json&auth_token='.$this->getToken();
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function send(MessageInterface $message)
@@ -193,18 +183,21 @@ class Guzzle implements TransportInterface
             }
         }
 
-        // Build up the data we are sending to Hipchat
-        $data = array(
-            'room_id'        => $this->getRoom(),
-            'from'           => $this->getFrom(),
-            'message'        => $message->getMessage(),
-            'message_format' => $message->getMessageFormat(),
-            'notify'         => $message->getNotification(),
-            'color'          => $message->getBackgroundColor(),
-            'format'         => 'json',
-        );
-        $data = http_build_query($data, '', '&');
-
-        return $this->http->post($this->getUri(), $this->getHeaders(), $data)->send();
+        return $this->http->post($this->getUri(), $this->getHeaders(), $this->buildData($message))->send();
     }
+
+    /**
+     * Uri of the request URL to the Hipchat API.
+     *
+     * @return string
+     */
+    abstract protected function getUri();
+
+    /**
+     * Build data message
+     *
+     * @param rcrowe\Hippy\Message\MessageInterface $message
+     * @return string
+     */
+    abstract protected function buildData(MessageInterface $message);
 }
